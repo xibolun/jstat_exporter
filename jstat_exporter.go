@@ -275,6 +275,11 @@ func (e *Exporter) JstatGc(ch chan<- prometheus.Metric) {
 func main() {
 	flag.Parse()
 
+	if _, err := exec.LookPath(*jstatPath); err != nil {
+		log.Fatalf("jstat not found at %s", *jstatPath)
+		return
+	}
+
 	exporter := NewExporter(*jstatPath, *targetPid)
 	prometheus.MustRegister(exporter)
 
