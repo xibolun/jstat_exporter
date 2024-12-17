@@ -26,30 +26,32 @@ jobs:
       - name: Create release
         uses: actions/create-release@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ github.event.release.name }}
           release_name: ${{ github.event.release.name }}
-          release_body: ${{ github.event.release.body }}
+          body: ${{ github.event.release.body }}
+          draft: false
+          prerelease: false
+          commitish: main
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
 
       - name: Upload artifact
         uses: actions/upload-release-asset@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_id: ${{ github.event.release.id }}
-          file: jstat_exporter
-          file_name: jstat_exporter-linux-amd64
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: jstat_exporter
+          asset_name: jstat_exporter
 
       - name: Upload artifact
         uses: actions/upload-release-asset@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_id: ${{ github.event.release.id }}
-          file: jstat_exporter-darwin-amd64
-          file_name: jstat_exporter-darwin-amd64
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: jstat_exporter-darwin-amd64
+          asset_name: jstat_exporter-darwin-amd64
 
       - name: Upload artifact
         uses: actions/upload-release-asset@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_id: ${{ github.event.release.id }}
-          file: jstat_exporter-windows-amd64.exe
-          file_name: jstat_exporter-windows-amd64.exe
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: jstat_exporter-windows-amd64.exe
+          asset_name: jstat_exporter-windows-amd64.exe
