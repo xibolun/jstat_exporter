@@ -36,13 +36,14 @@ fi
 
 
 # 配置文件
-cat << EOF > config.yml
-jms_addr: "$jms_url"
-jms_token: "$token"
-interval: 10
-dial_timeout: 3
-http_port: $port
+cat << EOF > start.sh
+#!/bin/bash
+target_pid=$target_pid
+jstat_path=$jstat_path
+/opt/jstat_exporter/jstat_exporter --web.listen-address=":$port" --jstat.path=\$jstat_path --target.pid=\$target_pid
 EOF
+
+chmod 775 $INSTALL_DIR/start.sh
 
 echo "Installation completed successfully."
 
@@ -50,12 +51,12 @@ if command -v "supervisorctl" &> /dev/null; then
 cat << EOF > /etc/supervisord/jstat_exporter.conf
 [program:jstat_exporter]
 directory=$INSTALL_DIR
-command=$INSTALL_DIR/jstat_exporter --web.listen-address=":$port" --jstat.path="$jstat_path" --target.pid="$target_pid"
+command=/bin/bash -i -c $INSTALL_DIR/start.sh
 autostart=true
 autorestart=true
 user=root
 EOF
     supervisorctl update jstat_exporter
 else
-    $INSTALL_DIR/jstat_exporter --web.listen-address=":$port" --jstat.path="$jstat_path" --target.pid="$target_pid"
+    bash -c $INSTALL_DIR/start.sh
 fi
