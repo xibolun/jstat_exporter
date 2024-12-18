@@ -26,7 +26,6 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -o jstat_exporter-windows-amd64.exe jstat_exporter.go
 
       - name: Create release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
