@@ -31,7 +31,7 @@ fi
 
 if [ -z "$target_pid" ]; then
     ehco "java pid can not be empty"
-    exit(1)
+    exit 1
 fi
 
 
